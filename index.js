@@ -39,9 +39,24 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
+};
 
-}
+Person.prototype.eat = function (someFood) {
+  if (this.stomach.length < 10)
+    this.stomach.push(someFood);
+};
+
+Person.prototype.poop = function () {
+  this.stomach = [];
+};
+
+Person.prototype.toString = function () {
+  return `${this.name}, ${this.age}`;
+};
 
 /*
   TASK 2
@@ -57,9 +72,34 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
+};
 
-}
+Car.prototype.fill = function (gallons) {
+  this.tank += gallons;
+};
+
+Car.prototype.drive = function (distance) {
+  // declaring range taking this.tank's current value (0 or more if gallons were added) and multiplying by the car's fuel efficiency
+  const drivableMiles = this.tank * this.milesPerGallon;
+  if (distance <= drivableMiles) {
+    // calculates mileage with distance taken into account
+    this.odometer += distance;
+    // calculates tank capacity (first divides the distance with milesPerGallon to find how many gallons were used, then minuses that value from the tank)
+    this.tank -= distance / this.milesPerGallon;
+  } else {
+    // distance was greater than drivableMiles and you ran out of gas
+    // this.odometer finds the new mileage after adding the driveableMiles to the current mileage
+    this.odometer += drivableMiles;
+    // declares tank capacity after distance failed to be less than or equal to drivableMiles
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`;
+  }
+};
 
 /*
   TASK 3
@@ -68,18 +108,27 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
 
-}
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this.favoriteToy = favoriteToy;
+};
+
+Baby.prototype = Object.create(Person.prototype);
+
+Baby.prototype.play = function () {
+  return `Playing with ${this.favoriteToy}`;
+};
+
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window/Global Object Binding - Global "this" === window/console Object (behind the scenes)
+  2. Implicit Binding - When a function is called with a method, the object to the left of the dot is "this".
+  3. New Binding - In terms of key:value pairs, When using "this" in a constructor function it refers to the key.
+  4. Explicit Binding - when using .call, "this" defines new instances for the subclass.
 */
 
 
