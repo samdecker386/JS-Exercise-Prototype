@@ -81,7 +81,25 @@ function Car(model, milesPerGallon) {
 
 Car.prototype.fill = function (gallons) {
   this.tank += gallons;
-}
+};
+
+Car.prototype.drive = function (distance) {
+  // declaring range taking this.tank's current value (0 or more if gallons were added) and multiplying by the car's fuel efficiency
+  const drivableMiles = this.tank * this.milesPerGallon;
+  if (distance <= drivableMiles) {
+    // calculates mileage with distance taken into account
+    this.odometer += distance;
+    // calculates tank capacity (first divides the distance with milesPerGallon to find how many gallons were used, then minuses that value from the tank)
+    this.tank -= distance / this.milesPerGallon;
+  } else {
+    // distance was greater than drivableMiles and you ran out of gas
+    // this.odometer finds the new mileage after adding the driveableMiles to the current mileage
+    this.odometer += drivableMiles;
+    // declares tank capacity after distance failed to be less than or equal to drivableMiles
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`;
+  }
+};
 
 /*
   TASK 3
@@ -98,7 +116,7 @@ function Baby(name, age, favoriteToy) {
 
 Baby.prototype = Object.create(Person.prototype);
 
-Baby.prototype.play = function() {
+Baby.prototype.play = function () {
   return `Playing with ${this.favoriteToy}`;
 };
 
@@ -107,10 +125,10 @@ Baby.prototype.play = function() {
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window/Global Object Binding - Global "this" === window/console Object (behind the scenes)
+  2. Implicit Binding - When a function is called with a method, the object to the left of the dot is "this".
+  3. New Binding - In terms of key:value pairs, When using "this" in a constructor function it refers to the key.
+  4. Explicit Binding - when using .call, "this" defines new instances for the subclass.
 */
 
 
